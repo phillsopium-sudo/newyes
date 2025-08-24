@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Lua Obfuscator</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-code me-2"></i>
+                Lua Obfuscator
+            </a>
+            <div>
+                <a href="/" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i>
+                    Back to Tool
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-6 mb-4">
+                    <i class="fas fa-book me-2"></i>
+                    API Documentation
+                </h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="#overview" class="list-group-item list-group-item-action">Overview</a>
+                    <a href="#obfuscate" class="list-group-item list-group-item-action">POST /api/obfuscate</a>
+                    <a href="#validate" class="list-group-item list-group-item-action">POST /api/validate</a>
+                    <a href="#techniques" class="list-group-item list-group-item-action">GET /api/techniques</a>
+                    <a href="#errors" class="list-group-item list-group-item-action">Error Handling</a>
+                    <a href="#examples" class="list-group-item list-group-item-action">Examples</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <section id="overview" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Overview</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>The Lua Obfuscator API provides RESTful endpoints for obfuscating Lua code using various techniques. All endpoints accept and return JSON data.</p>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Base URL:</strong> <code>http://your-domain.com/api</code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="obfuscate" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>POST /api/obfuscate</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Obfuscate Lua code using specified techniques and obfuscation level.</p>
+                            
+                            <h5>Request Body</h5>
+                            <pre><code>{
+  "code": "string (required) - The Lua code to obfuscate",
+  "level": "string (optional) - Obfuscation level: basic|medium|advanced (default: basic)",
+  "options": {
+    "rename_variables": "boolean (optional) - Rename variables to random strings",
+    "encode_strings": "boolean (optional) - Encode string literals",
+    "remove_comments": "boolean (optional) - Remove all comments",
+    "minify": "boolean (optional) - Remove unnecessary whitespace",
+    "obfuscate_control_flow": "boolean (optional) - Add dummy control flow"
+  }
+}</code></pre>
+
+                            <h5>Response</h5>
+                            <pre><code>{
+  "obfuscated_code": "string - The obfuscated Lua code",
+  "original_size": "number - Size of original code in characters",
+  "obfuscated_size": "number - Size of obfuscated code in characters",
+  "level": "string - Applied obfuscation level",
+  "success": true
+}</code></pre>
+
+                            <h5>Example Request</h5>
+                            <pre><code>curl -X POST http://localhost:5000/api/obfuscate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "local x = 5\nprint(\"Hello World\")",
+    "level": "medium",
+    "options": {
+      "rename_variables": true,
+      "encode_strings": true,
+      "remove_comments": true,
+      "minify": true
+    }
+  }'</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="validate" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>POST /api/validate</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Validate Lua code syntax without obfuscating it.</p>
+                            
+                            <h5>Request Body</h5>
+                            <pre><code>{
+  "code": "string (required) - The Lua code to validate"
+}</code></pre>
+
+                            <h5>Response</h5>
+                            <pre><code>{
+  "valid": "boolean - Whether the syntax is valid",
+  "error_message": "string|null - Error message if syntax is invalid",
+  "success": true
+}</code></pre>
+
+                            <h5>Example Request</h5>
+                            <pre><code>curl -X POST http://localhost:5000/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "local x = 5\nprint(x)"
+  }'</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="techniques" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>GET /api/techniques</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Get information about available obfuscation techniques and levels.</p>
+                            
+                            <h5>Response</h5>
+                            <pre><code>{
+  "levels": ["basic", "medium", "advanced"],
+  "techniques": {
+    "rename_variables": "Rename variables to random strings",
+    "encode_strings": "Encode string literals",
+    "remove_comments": "Remove all comments",
+    "minify": "Remove unnecessary whitespace",
+    "obfuscate_control_flow": "Add dummy control flow statements"
+  },
+  "level_descriptions": {
+    "basic": "Variable renaming and comment removal",
+    "medium": "Basic + string encoding and minification",
+    "advanced": "Medium + control flow obfuscation"
+  },
+  "success": true
+}</code></pre>
+
+                            <h5>Example Request</h5>
+                            <pre><code>curl -X GET http://localhost:5000/api/techniques</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="errors" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Error Handling</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>All endpoints return error responses in the following format:</p>
+                            
+                            <pre><code>{
+  "error": "string - Description of the error",
+  "success": false
+}</code></pre>
+
+                            <h5>HTTP Status Codes</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="badge bg-success">200</span></td>
+                                            <td>Request successful</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-warning">400</span></td>
+                                            <td>Bad request (invalid input, syntax errors)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="badge bg-danger">500</span></td>
+                                            <td>Internal server error</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="examples" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Usage Examples</h3>
+                        </div>
+                        <div class="card-body">
+                            <h5>Python Example</h5>
+                            <pre><code>import requests
+import json
+
+# Obfuscate Lua code
+url = "http://localhost:5000/api/obfuscate"
+data = {
+    "code": """
+        local function factorial(n)
+            if n <= 1 then
+                return 1
+            else
+                return n * factorial(n - 1)
+            end
+        end
+        
+        print("Result:", factorial(5))
+    """,
+    "level": "advanced",
+    "options": {
+        "rename_variables": True,
+        "encode_strings": True,
+        "remove_comments": True,
+        "minify": True,
+        "obfuscate_control_flow": True
+    }
+}
+
+response = requests.post(url, json=data)
+result = response.json()
+
+if result["success"]:
+    print("Obfuscated code:")
+    print(result["obfuscated_code"])
+else:
+    print("Error:", result["error"])</code></pre>
+
+                            <h5>JavaScript Example</h5>
+                            <pre><code>// Validate Lua syntax
+fetch('/api/validate', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        code: 'local x = 5\nprint(x)'
+    })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success && data.valid) {
+        console.log('Syntax is valid');
+    } else {
+        console.log('Syntax error:', data.error_message);
+    }
+})
+.catch(error => console.error('Error:', error));</code></pre>
+
+                            <h5>Discord Bot Integration</h5>
+                            <pre><code># Example for Discord bot integration
+import discord
+import requests
+
+async def obfuscate_command(ctx, *, code):
+    """Discord bot command to obfuscate Lua code"""
+    
+    response = requests.post('http://your-api-host:5000/api/obfuscate', 
+                           json={
+                               'code': code,
+                               'level': 'medium'
+                           })
+    
+    if response.status_code == 200:
+        result = response.json()
+        if result['success']:
+            # Send obfuscated code back to Discord
+            await ctx.send(f"```lua\n{result['obfuscated_code']}\n```")
+        else:
+            await ctx.send(f"Error: {result['error']}")
+    else:
+        await ctx.send("API request failed")</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <small>&copy; 2025 Lua Obfuscator API. Educational use only.</small>
+                </div>
+                <div class="col-md-6 text-end">
+                    <small>
+                        <a href="/" class="text-light text-decoration-none">Back to Tool</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
